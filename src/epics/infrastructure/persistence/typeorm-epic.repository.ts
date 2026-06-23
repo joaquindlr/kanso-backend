@@ -15,6 +15,20 @@ export class TypeOrmEpicRepository implements EpicRepository {
     return this.repository.find({ relations: ['project'] });
   }
 
+  async findByProjectId(projectId: string): Promise<Epic[]> {
+    return this.repository
+      .createQueryBuilder('epic')
+      .where('epic.projectId = :projectId', { projectId })
+      .loadRelationCountAndMap('epic.totalTasks', 'epic.issues')
+      .loadRelationCountAndMap(
+        'epic.completedTasks',
+        'epic.issues',
+        'issue',
+        (qb) => qb.where("issue.status IN ('DONE', 'DEPLOYED')"),
+      )
+      .getMany();
+  }
+
   async findById(id: string): Promise<Epic | null> {
     return this.repository.findOne({ where: { id }, relations: ['project'] });
   }

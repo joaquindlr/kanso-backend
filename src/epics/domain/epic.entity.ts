@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
   JoinColumn,
 } from 'typeorm';
 import { Project } from '../../projects/domain/project.entity';
+import { Issue } from '../../issues/domain/issue.entity';
 
 @Entity('epics')
 export class Epic {
@@ -32,4 +34,7 @@ export class Epic {
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
+
+  @OneToMany(() => Issue, (issue) => issue.epic)
+  issues: Issue[];
 }

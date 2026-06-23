@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
   JoinColumn,
 } from 'typeorm';
 import { User } from '../../users/domain/user.entity';
+import { Issue } from '../../issues/domain/issue.entity';
 
 @Entity('projects')
 export class Project {
@@ -24,6 +26,12 @@ export class Project {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
+  @Column({ type: 'varchar', length: 10, default: 'PROJ' })
+  prefix: string;
+
+  @Column({ type: 'int', name: 'issue_sequence', default: 0 })
+  issueSequence: number;
+
   @Column({ type: 'text', nullable: true })
   description: string;
 
@@ -35,4 +43,10 @@ export class Project {
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
+
+  @OneToMany(() => Issue, (issue) => issue.project)
+  issues: Issue[];
+
+  totalTasks?: number;
+  completedTasks?: number;
 }

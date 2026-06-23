@@ -34,7 +34,9 @@ export class Issue {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Project, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Project, (project) => project.issues, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'project_id' })
   project: Project;
 
@@ -47,6 +49,9 @@ export class Issue {
 
   @Column({ type: 'uuid', name: 'epic_id', nullable: true })
   epicId: string;
+
+  @Column({ type: 'varchar', length: 20 })
+  key: string;
 
   @Column({ type: 'enum', enum: IssueType })
   type: IssueType;
@@ -63,7 +68,7 @@ export class Issue {
   @Column({ type: 'varchar', length: 255 })
   position: string;
 
-  @Column({ type: 'enum', enum: IssueSeverity, nullable: true })
+  @Column({ type: 'enum', enum: IssueSeverity, default: IssueSeverity.MEDIUM })
   severity: IssueSeverity;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })

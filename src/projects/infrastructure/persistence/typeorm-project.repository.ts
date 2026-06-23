@@ -15,6 +15,20 @@ export class TypeOrmProjectRepository implements ProjectRepository {
     return this.repository.find({ relations: ['user'] });
   }
 
+  async findByUserId(userId: string): Promise<Project[]> {
+    return this.repository
+      .createQueryBuilder('project')
+      .where('project.userId = :userId', { userId })
+      .loadRelationCountAndMap('project.totalTasks', 'project.issues')
+      .loadRelationCountAndMap(
+        'project.completedTasks',
+        'project.issues',
+        'issue',
+        (qb) => qb.where("issue.status IN ('DONE', 'DEPLOYED')"),
+      )
+      .getMany();
+  }
+
   async findById(id: string): Promise<Project | null> {
     return this.repository.findOne({ where: { id }, relations: ['user'] });
   }

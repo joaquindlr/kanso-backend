@@ -15,10 +15,28 @@ export class TypeOrmIssueRepository implements IssueRepository {
     return this.repository.find({ relations: ['project', 'epic'] });
   }
 
+  async findByProjectId(projectId: string): Promise<Issue[]> {
+    return this.repository.find({
+      where: { projectId },
+      relations: ['project', 'epic'],
+    });
+  }
+
+  async findByEpicId(epicId: string): Promise<Issue[]> {
+    return this.repository.find({ where: { epicId } });
+  }
+
   async findById(id: string): Promise<Issue | null> {
     return this.repository.findOne({
       where: { id },
       relations: ['project', 'epic'],
+    });
+  }
+
+  async findLastIssueByStatus(projectId: string, status: string): Promise<Issue | null> {
+    return this.repository.findOne({
+      where: { projectId, status: status as any },
+      order: { position: 'DESC' },
     });
   }
 
