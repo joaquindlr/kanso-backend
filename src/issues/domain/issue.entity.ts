@@ -20,6 +20,7 @@ export enum IssueStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   DONE = 'DONE',
   DEPLOYED = 'DEPLOYED',
+  CLOSED = 'CLOSED',
 }
 
 export enum IssueSeverity {
