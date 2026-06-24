@@ -43,6 +43,10 @@ export class TypeOrmProjectRepository implements ProjectRepository {
     return this.findById(id);
   }
 
+  async updateWhiteboardData(id: string, data: any): Promise<void> {
+    await this.repository.update(id, { excalidrawData: data });
+  }
+
   async delete(id: string): Promise<void> {
     await this.repository.delete(id);
   }

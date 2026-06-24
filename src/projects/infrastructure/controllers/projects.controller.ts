@@ -15,8 +15,10 @@ import { FindProjectsUseCase } from '../../application/use-cases/find-projects.u
 import { FindProjectByIdUseCase } from '../../application/use-cases/find-project-by-id.use-case';
 import { UpdateProjectUseCase } from '../../application/use-cases/update-project.use-case';
 import { DeleteProjectUseCase } from '../../application/use-cases/delete-project.use-case';
+import { UpdateProjectWhiteboardUseCase } from '../../application/use-cases/update-project-whiteboard.use-case';
 import { CreateProjectDto } from '../../application/dtos/create-project.dto';
 import { UpdateProjectDto } from '../../application/dtos/update-project.dto';
+import { UpdateProjectWhiteboardDto } from '../../application/dtos/update-project-whiteboard.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('projects')
@@ -26,6 +28,7 @@ export class ProjectsController {
     private readonly findProjectsUseCase: FindProjectsUseCase,
     private readonly findProjectByIdUseCase: FindProjectByIdUseCase,
     private readonly updateProjectUseCase: UpdateProjectUseCase,
+    private readonly updateProjectWhiteboardUseCase: UpdateProjectWhiteboardUseCase,
     private readonly deleteProjectUseCase: DeleteProjectUseCase,
   ) {}
 
@@ -51,6 +54,15 @@ export class ProjectsController {
     @Body() dto: UpdateProjectDto,
   ) {
     return this.updateProjectUseCase.execute(userId, id, dto);
+  }
+
+  @Patch(':id/whiteboard')
+  updateWhiteboard(
+    @UserId() userId: string,
+    @Param('id') id: string,
+    @Body() dto: UpdateProjectWhiteboardDto,
+  ) {
+    return this.updateProjectWhiteboardUseCase.execute(userId, id, dto);
   }
 
   @Delete(':id')

@@ -9,6 +9,7 @@ import { FindProjectsUseCase } from './application/use-cases/find-projects.use-c
 import { FindProjectByIdUseCase } from './application/use-cases/find-project-by-id.use-case';
 import { UpdateProjectUseCase } from './application/use-cases/update-project.use-case';
 import { DeleteProjectUseCase } from './application/use-cases/delete-project.use-case';
+import { UpdateProjectWhiteboardUseCase } from './application/use-cases/update-project-whiteboard.use-case';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Project])],
@@ -22,8 +23,10 @@ import { DeleteProjectUseCase } from './application/use-cases/delete-project.use
     FindProjectsUseCase,
     FindProjectByIdUseCase,
     UpdateProjectUseCase,
+    UpdateProjectWhiteboardUseCase,
     DeleteProjectUseCase,
   ],
   exports: [ProjectRepository],
 })
+
 export class ProjectsModule {}

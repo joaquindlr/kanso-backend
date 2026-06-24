@@ -9,5 +9,6 @@ export abstract class ProjectRepository {
     id: string,
     project: Partial<Project>,
   ): Promise<Project | null>;
+  abstract updateWhiteboardData(id: string, data: any): Promise<void>;
   abstract delete(id: string): Promise<void>;
 }
