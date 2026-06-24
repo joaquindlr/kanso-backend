@@ -9,11 +9,13 @@ import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { EpicsModule } from './epics/epics.module';
 import { IssuesModule } from './issues/issues.module';
+import { CommentsModule } from './comments/comments.module';
 
 import { User } from './users/domain/user.entity';
 import { Project } from './projects/domain/project.entity';
 import { Epic } from './epics/domain/epic.entity';
 import { Issue } from './issues/domain/issue.entity';
+import { Comment } from './comments/domain/comment.entity';
 
 @Module({
   imports: [
@@ -29,7 +31,7 @@ import { Issue } from './issues/domain/issue.entity';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User, Project, Epic, Issue],
+        entities: [User, Project, Epic, Issue, Comment],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -39,6 +41,7 @@ import { Issue } from './issues/domain/issue.entity';
     ProjectsModule,
     EpicsModule,
     IssuesModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
