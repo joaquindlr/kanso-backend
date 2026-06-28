@@ -16,6 +16,7 @@ export enum IssueType {
 }
 
 export enum IssueStatus {
+  ICEBOX = 'ICEBOX',
   NEW = 'NEW',
   IN_PROGRESS = 'IN_PROGRESS',
   DONE = 'DONE',

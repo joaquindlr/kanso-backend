@@ -32,7 +32,7 @@ import { Comment } from './comments/domain/comment.entity';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         entities: [User, Project, Epic, Issue, Comment],
-        synchronize: true,
+        synchronize: configService.get<string>('DB_SYNCHRONIZE', 'true') === 'true',
       }),
       inject: [ConfigService],
     }),

@@ -34,7 +34,7 @@ export class CreateStoryUseCase {
 
     let position = dto.position;
     if (!position) {
-      const lastIssue = await this.issueRepository.findLastIssueByStatus(projectId, IssueStatus.NEW);
+      const lastIssue = await this.issueRepository.findLastIssueByStatus(projectId, dto.status || IssueStatus.NEW);
       if (lastIssue && lastIssue.position) {
         position = LexoRank.parse(lastIssue.position).genNext().toString();
       } else {
