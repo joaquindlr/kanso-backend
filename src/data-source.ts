@@ -3,13 +3,19 @@ import { config } from 'dotenv';
 
 config();
 
+const dbUrl = process.env.DATABASE_URL;
+
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT || '5432', 10),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  ...(dbUrl
+    ? { url: dbUrl }
+    : {
+        host: process.env.DB_HOST,
+        port: parseInt(process.env.DB_PORT || '5432', 10),
+        username: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+      }),
   entities: ['src/**/*.entity.ts'],
   migrations: ['src/migrations/*.ts'],
   synchronize: false,

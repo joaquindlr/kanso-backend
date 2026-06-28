@@ -24,16 +24,23 @@ import { Comment } from './comments/domain/comment.entity';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USER'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_NAME'),
-        entities: [User, Project, Epic, Issue, Comment],
-        synchronize: configService.get<string>('DB_SYNCHRONIZE', 'true') === 'true',
-      }),
+      useFactory: (configService: ConfigService) => {
+        const dbUrl = configService.get<string>('DATABASE_URL');
+        return {
+          type: 'postgres',
+          ...(dbUrl
+            ? { url: dbUrl }
+            : {
+                host: configService.get<string>('DB_HOST'),
+                port: configService.get<number>('DB_PORT'),
+                username: configService.get<string>('DB_USER'),
+                password: configService.get<string>('DB_PASSWORD'),
+                database: configService.get<string>('DB_NAME'),
+              }),
+          entities: [User, Project, Epic, Issue, Comment],
+          synchronize: configService.get<string>('DB_SYNCHRONIZE', 'true') === 'true',
+        };
+      },
       inject: [ConfigService],
     }),
     AuthModule,
