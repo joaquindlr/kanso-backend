@@ -29,7 +29,10 @@ export class CreateBugUseCase {
 
     let position = dto.position;
     if (!position) {
-      const lastIssue = await this.issueRepository.findLastIssueByStatus(projectId, IssueStatus.NEW);
+      const lastIssue = await this.issueRepository.findLastIssueByStatus(
+        projectId,
+        IssueStatus.NEW,
+      );
       if (lastIssue && lastIssue.position) {
         position = LexoRank.parse(lastIssue.position).genNext().toString();
       } else {
@@ -39,7 +42,9 @@ export class CreateBugUseCase {
 
     // Increment project issue sequence
     project.issueSequence += 1;
-    await this.projectRepository.update(project.id, { issueSequence: project.issueSequence });
+    await this.projectRepository.update(project.id, {
+      issueSequence: project.issueSequence,
+    });
     const key = `${project.prefix}-${project.issueSequence}`;
 
     return this.issueRepository.create({

@@ -1,4 +1,5 @@
 import { Project } from './project.entity';
+import { ExcalidrawWhiteboardData } from './whiteboard-data.interface';
 
 export abstract class ProjectRepository {
   abstract findAll(): Promise<Project[]>;
@@ -9,6 +10,9 @@ export abstract class ProjectRepository {
     id: string,
     project: Partial<Project>,
   ): Promise<Project | null>;
-  abstract updateWhiteboardData(id: string, data: any): Promise<void>;
+  abstract updateWhiteboardData(
+    id: string,
+    data: ExcalidrawWhiteboardData,
+  ): Promise<void>;
   abstract delete(id: string): Promise<void>;
 }

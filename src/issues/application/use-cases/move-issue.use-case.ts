@@ -39,25 +39,36 @@ export class MoveIssueUseCase {
         throw new BadRequestException('Invalid prevIssueId or nextIssueId');
       }
 
-      const prevRank = LexoRank.parse(prevIssue.position || LexoRank.middle().toString());
-      const nextRank = LexoRank.parse(nextIssue.position || LexoRank.middle().toString());
+      const prevRank = LexoRank.parse(
+        prevIssue.position || LexoRank.middle().toString(),
+      );
+      const nextRank = LexoRank.parse(
+        nextIssue.position || LexoRank.middle().toString(),
+      );
       newLexoRank = prevRank.between(nextRank);
     } else if (dto.prevIssueId) {
       const prevIssue = await this.issueRepository.findById(dto.prevIssueId);
       if (!prevIssue) {
         throw new BadRequestException('Invalid prevIssueId');
       }
-      const prevRank = LexoRank.parse(prevIssue.position || LexoRank.middle().toString());
+      const prevRank = LexoRank.parse(
+        prevIssue.position || LexoRank.middle().toString(),
+      );
       newLexoRank = prevRank.genNext();
     } else if (dto.nextIssueId) {
       const nextIssue = await this.issueRepository.findById(dto.nextIssueId);
       if (!nextIssue) {
         throw new BadRequestException('Invalid nextIssueId');
       }
-      const nextRank = LexoRank.parse(nextIssue.position || LexoRank.middle().toString());
+      const nextRank = LexoRank.parse(
+        nextIssue.position || LexoRank.middle().toString(),
+      );
       newLexoRank = nextRank.genPrev();
     } else {
-      const lastIssue = await this.issueRepository.findLastIssueByStatus(issue.projectId, dto.status);
+      const lastIssue = await this.issueRepository.findLastIssueByStatus(
+        issue.projectId,
+        dto.status,
+      );
       if (lastIssue && lastIssue.position) {
         const lastRank = LexoRank.parse(lastIssue.position);
         newLexoRank = lastRank.genNext();

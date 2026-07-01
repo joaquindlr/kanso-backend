@@ -29,5 +29,4 @@ import { StorageModule } from '../infrastructure/storage/storage.module';
   ],
   exports: [ProjectRepository],
 })
-
 export class ProjectsModule {}

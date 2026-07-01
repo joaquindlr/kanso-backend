@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Param,
-  Body,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/infrastructure/guards/jwt-auth.guard';
 import { UserId } from '../../../auth/infrastructure/decorators/user-id.decorator';
 import { CreateCommentUseCase } from '../../application/use-cases/create-comment.use-case';
@@ -30,10 +23,7 @@ export class CommentsController {
   }
 
   @Get()
-  findByIssue(
-    @UserId() userId: string,
-    @Param('issueId') issueId: string,
-  ) {
+  findByIssue(@UserId() userId: string, @Param('issueId') issueId: string) {
     return this.findCommentsByIssueUseCase.execute(userId, issueId);
   }
 }

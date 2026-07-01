@@ -10,11 +10,7 @@ import { IssuesModule } from '../issues/issues.module';
 import { ProjectsModule } from '../projects/projects.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Comment]),
-    IssuesModule,
-    ProjectsModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Comment]), IssuesModule, ProjectsModule],
   controllers: [CommentsController],
   providers: [
     {

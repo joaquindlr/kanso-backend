@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Project } from '../../domain/project.entity';
 import { ProjectRepository } from '../../domain/project.repository';
+import { ExcalidrawWhiteboardData } from '../../domain/whiteboard-data.interface';
 
 @Injectable()
 export class TypeOrmProjectRepository implements ProjectRepository {
@@ -43,7 +44,10 @@ export class TypeOrmProjectRepository implements ProjectRepository {
     return this.findById(id);
   }
 
-  async updateWhiteboardData(id: string, data: any): Promise<void> {
+  async updateWhiteboardData(
+    id: string,
+    data: ExcalidrawWhiteboardData,
+  ): Promise<void> {
     console.log('data: ', data);
     await this.repository.update(id, { excalidrawData: data });
   }

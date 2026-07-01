@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ProjectRepository } from '../../domain/project.repository';
 import { UpdateProjectWhiteboardDto } from '../dtos/update-project-whiteboard.dto';
 import { S3Service } from '../../../infrastructure/storage/s3.service';
+import { ExcalidrawWhiteboardData } from '../../domain/whiteboard-data.interface';
 @Injectable()
 export class UpdateProjectWhiteboardUseCase {
   private readonly logger = new Logger(UpdateProjectWhiteboardUseCase.name);
@@ -23,36 +24,19 @@ export class UpdateProjectWhiteboardUseCase {
       throw new NotFoundException('Project not found');
     }
 
-    let updatedExcalidrawData: any = dto.excalidrawData;
-    this.logger.log(
-      `Received excalidrawData type: ${typeof updatedExcalidrawData}. Has files? ${!!(updatedExcalidrawData && updatedExcalidrawData.files)}`,
-    );
-    if (updatedExcalidrawData && typeof updatedExcalidrawData === 'object') {
-      this.logger.log(
-        `Keys in excalidrawData: ${Object.keys(updatedExcalidrawData).join(', ')}`,
-      );
-      if (updatedExcalidrawData.files) {
-        this.logger.log(
-          `Keys in files: ${Object.keys(updatedExcalidrawData.files).join(', ')}`,
-        );
-      }
-    }
+    const updatedExcalidrawData: ExcalidrawWhiteboardData = dto.excalidrawData;
 
     if (updatedExcalidrawData && updatedExcalidrawData.files) {
       for (const fileId of Object.keys(updatedExcalidrawData.files)) {
         const fileObj = updatedExcalidrawData.files[fileId];
-        this.logger.log(
-          `Checking file ${fileId} with dataURL: ${fileObj?.dataURL?.substring(0, 100)}...`,
-        );
+
         if (fileObj && fileObj.dataURL && fileObj.dataURL.startsWith('data:')) {
-          // Extract base64 (if any) and mime type
           const matches = fileObj.dataURL.match(/^data:(.*?)(;base64)?,(.+)$/);
           if (matches) {
-            this.logger.log(`Regex matched for ${fileId}, uploading to S3...`);
             const mimeType = matches[1];
             const isBase64 = !!matches[2];
             const data = matches[3];
-            
+
             let buffer: Buffer;
             if (isBase64) {
               buffer = Buffer.from(data, 'base64');

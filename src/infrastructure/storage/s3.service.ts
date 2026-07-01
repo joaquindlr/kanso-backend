@@ -24,7 +24,11 @@ export class S3Service {
     });
   }
 
-  async uploadFile(key: string, buffer: Buffer, mimeType: string): Promise<void> {
+  async uploadFile(
+    key: string,
+    buffer: Buffer,
+    mimeType: string,
+  ): Promise<void> {
     const command = new PutObjectCommand({
       Bucket: this.bucket,
       Key: key,

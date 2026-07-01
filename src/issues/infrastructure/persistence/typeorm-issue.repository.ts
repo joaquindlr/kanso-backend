@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Issue } from '../../domain/issue.entity';
+import { Issue, IssueStatus } from '../../domain/issue.entity';
 import { IssueRepository } from '../../domain/issue.repository';
 
 @Injectable()
@@ -33,9 +33,12 @@ export class TypeOrmIssueRepository implements IssueRepository {
     });
   }
 
-  async findLastIssueByStatus(projectId: string, status: string): Promise<Issue | null> {
+  async findLastIssueByStatus(
+    projectId: string,
+    status: string,
+  ): Promise<Issue | null> {
     return this.repository.findOne({
-      where: { projectId, status: status as any },
+      where: { projectId, status: status as IssueStatus },
       order: { position: 'DESC' },
     });
   }

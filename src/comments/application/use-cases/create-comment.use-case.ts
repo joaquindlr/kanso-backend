@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { CommentRepository } from '../../domain/comment.repository';
 import { IssueRepository } from '../../../issues/domain/issue.repository';
 import { ProjectRepository } from '../../../projects/domain/project.repository';

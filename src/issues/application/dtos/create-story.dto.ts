@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsOptional, IsEnum, IsUUID } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsEnum,
+  IsUUID,
+} from 'class-validator';
 import { IssueSeverity, IssueStatus } from '../../domain/issue.entity';
 
 export class CreateStoryDto {

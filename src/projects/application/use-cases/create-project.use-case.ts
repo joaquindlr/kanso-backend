@@ -19,8 +19,15 @@ export class CreateProjectUseCase {
   private generatePrefix(name: string): string {
     const words = name.trim().split(/\s+/);
     if (words.length > 1) {
-      return words.map((w) => w[0]).join('').toUpperCase().substring(0, 4);
+      return words
+        .map((w) => w[0])
+        .join('')
+        .toUpperCase()
+        .substring(0, 4);
     }
-    return name.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 4);
+    return name
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .toUpperCase()
+      .substring(0, 4);
   }
 }
