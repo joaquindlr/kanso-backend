@@ -81,14 +81,11 @@ export class ProjectsController {
     @Param('fileId') fileId: string,
     @Res() res: Response,
   ) {
-    // Check if the user has access to the project
     await this.findProjectByIdUseCase.execute(userId, id);
-    
-    // Generate presigned URL
+
     const s3Key = `projects/${id}/files/${fileId}`;
     const url = await this.s3Service.getPresignedUrl(s3Key);
-    
-    // Redirect the browser to the presigned URL
+
     return res.redirect(302, url);
   }
 }

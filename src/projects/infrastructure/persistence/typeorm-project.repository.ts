@@ -44,6 +44,7 @@ export class TypeOrmProjectRepository implements ProjectRepository {
   }
 
   async updateWhiteboardData(id: string, data: any): Promise<void> {
+    console.log('data: ', data);
     await this.repository.update(id, { excalidrawData: data });
   }
 
