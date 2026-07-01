@@ -1,10 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ProjectRepository } from '../../domain/project.repository';
 import { UpdateProjectWhiteboardDto } from '../dtos/update-project-whiteboard.dto';
 import { S3Service } from '../../../infrastructure/storage/s3.service';
 @Injectable()
 export class UpdateProjectWhiteboardUseCase {
+  private readonly logger = new Logger(UpdateProjectWhiteboardUseCase.name);
+
   constructor(
     private readonly projectRepository: ProjectRepository,
     private readonly s3Service: S3Service,
@@ -26,10 +28,12 @@ export class UpdateProjectWhiteboardUseCase {
     if (updatedExcalidrawData && updatedExcalidrawData.files) {
       for (const fileId of Object.keys(updatedExcalidrawData.files)) {
         const fileObj = updatedExcalidrawData.files[fileId];
+        this.logger.log(`Checking file ${fileId} with dataURL: ${fileObj?.dataURL?.substring(0, 100)}...`);
         if (fileObj && fileObj.dataURL && fileObj.dataURL.startsWith('data:')) {
           // Extract base64 and mime type
-          const matches = fileObj.dataURL.match(/^data:([a-zA-Z0-9-+/]+);base64,(.+)$/);
+          const matches = fileObj.dataURL.match(/^data:(.*?);base64,(.+)$/);
           if (matches && matches.length === 3) {
+            this.logger.log(`Regex matched for ${fileId}, uploading to S3...`);
             const mimeType = matches[1];
             const base64Data = matches[2];
             const buffer = Buffer.from(base64Data, 'base64');
@@ -39,7 +43,11 @@ export class UpdateProjectWhiteboardUseCase {
             
             const apiUrl = this.configService.get<string>('API_URL') || 'http://localhost:3000';
             fileObj.dataURL = `${apiUrl}/projects/${projectId}/files/${fileId}`;
+          } else {
+            this.logger.warn(`File ${fileId} started with data: but failed regex match`);
           }
+        } else {
+          this.logger.log(`File ${fileId} did not start with data:`);
         }
       }
     }
