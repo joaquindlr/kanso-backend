@@ -7,7 +7,9 @@ import {
   Param,
   Delete,
   UseGuards,
+  Res,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { JwtAuthGuard } from '../../../auth/infrastructure/guards/jwt-auth.guard';
 import { UserId } from '../../../auth/infrastructure/decorators/user-id.decorator';
 import { CreateProjectUseCase } from '../../application/use-cases/create-project.use-case';
@@ -19,6 +21,7 @@ import { UpdateProjectWhiteboardUseCase } from '../../application/use-cases/upda
 import { CreateProjectDto } from '../../application/dtos/create-project.dto';
 import { UpdateProjectDto } from '../../application/dtos/update-project.dto';
 import { UpdateProjectWhiteboardDto } from '../../application/dtos/update-project-whiteboard.dto';
+import { S3Service } from '../../../infrastructure/storage/s3.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('projects')
@@ -30,6 +33,7 @@ export class ProjectsController {
     private readonly updateProjectUseCase: UpdateProjectUseCase,
     private readonly updateProjectWhiteboardUseCase: UpdateProjectWhiteboardUseCase,
     private readonly deleteProjectUseCase: DeleteProjectUseCase,
+    private readonly s3Service: S3Service,
   ) {}
 
   @Post()
@@ -68,5 +72,23 @@ export class ProjectsController {
   @Delete(':id')
   remove(@UserId() userId: string, @Param('id') id: string) {
     return this.deleteProjectUseCase.execute(userId, id);
+  }
+
+  @Get(':id/files/:fileId')
+  async getFile(
+    @UserId() userId: string,
+    @Param('id') id: string,
+    @Param('fileId') fileId: string,
+    @Res() res: Response,
+  ) {
+    // Check if the user has access to the project
+    await this.findProjectByIdUseCase.execute(userId, id);
+    
+    // Generate presigned URL
+    const s3Key = `projects/${id}/files/${fileId}`;
+    const url = await this.s3Service.getPresignedUrl(s3Key);
+    
+    // Redirect the browser to the presigned URL
+    return res.redirect(302, url);
   }
 }

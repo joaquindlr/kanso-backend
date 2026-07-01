@@ -10,6 +10,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { EpicsModule } from './epics/epics.module';
 import { IssuesModule } from './issues/issues.module';
 import { CommentsModule } from './comments/comments.module';
+import { StorageModule } from './infrastructure/storage/storage.module';
 
 import { User } from './users/domain/user.entity';
 import { Project } from './projects/domain/project.entity';
@@ -49,6 +50,7 @@ import { Comment } from './comments/domain/comment.entity';
     EpicsModule,
     IssuesModule,
     CommentsModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

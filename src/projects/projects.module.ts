@@ -10,9 +10,10 @@ import { FindProjectByIdUseCase } from './application/use-cases/find-project-by-
 import { UpdateProjectUseCase } from './application/use-cases/update-project.use-case';
 import { DeleteProjectUseCase } from './application/use-cases/delete-project.use-case';
 import { UpdateProjectWhiteboardUseCase } from './application/use-cases/update-project-whiteboard.use-case';
+import { StorageModule } from '../infrastructure/storage/storage.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Project])],
+  imports: [TypeOrmModule.forFeature([Project]), StorageModule],
   controllers: [ProjectsController],
   providers: [
     {

@@ -1,0 +1,44 @@
+import { Injectable } from '@nestjs/common';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+
+@Injectable()
+export class S3Service {
+  private s3Client: S3Client;
+  private bucket: string;
+
+  constructor() {
+    this.bucket = process.env.S3_BUCKET || 'kanso-bucket';
+    this.s3Client = new S3Client({
+      region: process.env.S3_REGION || 'us-east-1',
+      endpoint: process.env.S3_ENDPOINT,
+      forcePathStyle: process.env.S3_FORCE_PATH_STYLE === 'true',
+      credentials: {
+        accessKeyId: process.env.S3_ACCESS_KEY || 'minioadmin',
+        secretAccessKey: process.env.S3_SECRET_KEY || 'minioadmin',
+      },
+    });
+  }
+
+  async uploadFile(key: string, buffer: Buffer, mimeType: string): Promise<void> {
+    const command = new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+      Body: buffer,
+      ContentType: mimeType,
+    });
+    await this.s3Client.send(command);
+  }
+
+  async getPresignedUrl(key: string, expiresIn = 900): Promise<string> {
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+    });
+    return getSignedUrl(this.s3Client, command, { expiresIn });
+  }
+}
