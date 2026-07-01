@@ -24,6 +24,13 @@ export class UpdateProjectWhiteboardUseCase {
     }
 
     let updatedExcalidrawData: any = dto.excalidrawData;
+    this.logger.log(`Received excalidrawData type: ${typeof updatedExcalidrawData}. Has files? ${!!(updatedExcalidrawData && updatedExcalidrawData.files)}`);
+    if (updatedExcalidrawData && typeof updatedExcalidrawData === 'object') {
+      this.logger.log(`Keys in excalidrawData: ${Object.keys(updatedExcalidrawData).join(', ')}`);
+      if (updatedExcalidrawData.files) {
+        this.logger.log(`Keys in files: ${Object.keys(updatedExcalidrawData.files).join(', ')}`);
+      }
+    }
 
     if (updatedExcalidrawData && updatedExcalidrawData.files) {
       for (const fileId of Object.keys(updatedExcalidrawData.files)) {
