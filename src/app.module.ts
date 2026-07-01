@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -11,6 +11,7 @@ import { EpicsModule } from './epics/epics.module';
 import { IssuesModule } from './issues/issues.module';
 import { CommentsModule } from './comments/comments.module';
 import { StorageModule } from './infrastructure/storage/storage.module';
+import { HttpLoggerMiddleware } from './common/middlewares/http-logger.middleware';
 
 import { User } from './users/domain/user.entity';
 import { Project } from './projects/domain/project.entity';
@@ -55,4 +56,8 @@ import { Comment } from './comments/domain/comment.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(HttpLoggerMiddleware).forRoutes('*');
+  }
+}
